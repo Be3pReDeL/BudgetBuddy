@@ -1,0 +1,50 @@
+{% extends 'finance/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container">
+    <h2>Главная страница</h2>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#expenseModal">
+        Добавить Трату
+    </button>
+
+    <!-- Отображение трат, разделенных по датам -->
+    {% for date, expenses in expenses_by_date.items %}
+        <h3>{{ date }}</h3>
+        <ul class="list-group">
+            {% for expense in expenses %}
+                <li class="list-group-item">
+                    {{ expense.title }} - {{ expense.amount }} - {{ expense.category }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% endfor %}
+
+    <!-- Модальное окно для добавления траты -->
+    <div class="modal fade" id="expenseModal" tabindex="-1" aria-labelledby="expenseModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="expenseModalLabel">Новая Трата</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="post" action="{% url 'add_expense' %}">
+                        {% csrf_token %}
+                        {{ form|crispy }}
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    <button type="button" class="btn btn-primary">Завершить</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap JavaScript Bundle with Popper (включает JS для модальных окон) -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
+</div>
+{% endblock %}

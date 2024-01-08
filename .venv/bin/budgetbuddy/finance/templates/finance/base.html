@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+{% load static %}
+{% load crispy_forms_tags %}
+
+<html>
+<head>
+    <title>BudgetBuddy!</title>
+    <!-- Подключение CSS библиотеки Bootstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css">
+    <!-- Favicon -->
+    <link rel="icon" href="{% static 'finance/favicon.ico' %}" type="image/x-icon">
+    <!-- Дополнительные стили -->
+</head>
+<body>
+    <div class="container">
+        <!-- Шапка приложения -->
+        <header class="py-3 mb-3 border-bottom">
+            <h1>BudgetBuddy!</h1>
+        </header>
+
+        {% block content %}
+        <!-- Содержимое для отдельных страниц будет вставлено здесь -->
+        {% endblock %}
+    </div>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap JavaScript Bundle with Popper (включает JS для модальных окон) -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

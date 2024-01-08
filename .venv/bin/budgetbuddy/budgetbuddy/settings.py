@@ -31,12 +31,16 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
+    'finance.apps.FinanceConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'crispy_forms',
+    'crispy_bootstrap5',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -67,6 +71,9 @@ TEMPLATES = [
     },
 ]
 
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
 WSGI_APPLICATION = 'budgetbuddy.wsgi.application'
 
 
@@ -79,7 +86,7 @@ DATABASES = {
         'NAME': 'userDB',
         'USER': 'postgres',
         'PASSWORD': "password",
-        'HOST': '127.0.0.1',
+        'HOST': 'localhost',
         'PORT': '5432'
     }
 }
