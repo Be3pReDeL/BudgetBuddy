@@ -4,39 +4,55 @@
 {% block content %}
 <div class="container">
     <h2>Главная страница</h2>
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#expenseModal">
+    <!-- Кнопка для открытия модального окна -->
+    <button type="button" class="btn btn-primary" id="openExpenseModal">
         Добавить Трату
     </button>
+    <div class="mb-5"></div>
 
-    <!-- Отображение трат, разделенных по датам -->
-    {% for date, expenses in expenses_by_date.items %}
-        <h3>{{ date }}</h3>
-        <ul class="list-group">
-            {% for expense in expenses %}
-                <li class="list-group-item">
-                    {{ expense.title }} - {{ expense.amount }} - {{ expense.category }}
-                </li>
-            {% endfor %}
-        </ul>
-    {% endfor %}
+    <!-- Отображение уже добавленных трат, разделенных по датам -->
+    {% if expenses_by_date %}
+        <h3>Добавленные Траты:</h3>
+        {% for date, expenses in expenses_by_date.items %}
+            <h4>{{ date }}</h4>
+            <ul class="list-group">
+                {% for expense in expenses %}
+                    <li class="list-group-item">
+                        {{ expense.title }} - {{ expense.amount }} - {{ expense.category }}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endfor %}
+    {% else %}
+        <p>Нет добавленных трат.</p>
+    {% endif %}
+
+    <!-- Отображение ошибки о стоимости меньше 0 -->
+    {% if negative_amount_error %}
+        <div class="alert alert-danger mt-3">
+            Стоимость траты не может быть меньше 0.
+        </div>
+    {% endif %}
 
     <!-- Модальное окно для добавления траты -->
-    <div class="modal fade" id="expenseModal" tabindex="-1" aria-labelledby="expenseModalLabel" aria-hidden="true">
+    <div class="modal" id="expenseModal" tabindex="-1" aria-labelledby="expenseModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="expenseModalLabel">Новая Трата</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form method="post" action="{% url 'add_expense' %}">
+                    <!-- Форма для добавления траты -->
+                    <form method="post" action="{% url 'add_expense' %}" id="expenseForm">
                         {% csrf_token %}
                         {{ form|crispy }}
+
+                        <!-- Отображение ошибок в модальном окне -->
+                        <div class="alert alert-danger mt-3" id="errorMessage" style="display: none;">
+                        </div>
+
+                        <button type="button" class="btn btn-primary" id="addExpenseButton">Добавить</button>
                     </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                    <button type="button" class="btn btn-primary">Завершить</button>
                 </div>
             </div>
         </div>
@@ -45,6 +61,41 @@
     <!-- Bootstrap CSS -->
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap JavaScript Bundle with Popper (включает JS для модальных окон) -->
+    <script src="https://code.jquery.com/jquery-3.6.4.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            // Открытие модального окна по нажатию кнопки
+            $("#openExpenseModal").click(function () {
+                $("#expenseModal").modal('show');
+            });
+
+            // Закрытие модального окна при нажатии кнопки "Закрыть"
+            $("#closeExpenseModal").click(function () {
+                $('#expenseModal').modal('hide');
+            });
+
+            // Очистка формы при закрытии модального окна
+            $('#expenseModal').on('hidden.bs.modal', function () {
+                $('#expenseForm')[0].reset();
+                $('#errorMessage').hide();  // Скрытие сообщения об ошибке
+            });
+
+            // Обработка кнопки "Добавить"
+            $("#addExpenseButton").click(function () {
+                // Validate the form input
+                var amount = parseFloat($("#id_amount").val());
+                if (isNaN(amount) || amount < 0) {
+                    // Display an error message
+                    $('#errorMessage').html("Стоймость траты не может быть меньше 0").show();
+                } else {
+                    // Submit the form (assuming it is valid)
+                    $("#expenseForm").submit();
+                }
+            });
+        });
+    </script>
 </div>
 {% endblock %}

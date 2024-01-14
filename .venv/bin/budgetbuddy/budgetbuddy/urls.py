@@ -26,6 +26,6 @@ urlpatterns = [
     path('login/', user_views.login_view, name='login'),
     path('register/', user_views.register_view, name='register'),
     path('home/', finance_views.home, name='home'),
-    path('add_expense/', finance_views.add_expense, name='add_expense'),
     path('about/', finance_views.about, name='about'),
+    path('add_expense/', finance_views.add_expense, name='add_expense'),
 ]
