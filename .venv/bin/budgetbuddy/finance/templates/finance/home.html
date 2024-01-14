@@ -4,6 +4,10 @@
 {% block content %}
 <div class="container">
     <h2>Главная страница</h2>
+    <!-- Круговая диаграмма -->
+    <div>
+        <canvas id="expenseChart" width="400" height="400"></canvas>
+    </div>
     <!-- Кнопка для открытия модального окна -->
     <button type="button" class="btn btn-primary" id="openExpenseModal">
         Добавить Трату
@@ -64,6 +68,8 @@
     <script src="https://code.jquery.com/jquery-3.6.4.slim.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 
     <script>
         $(document).ready(function () {
@@ -97,5 +103,27 @@
             });
         });
     </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Получите данные из контекста шаблона
+            var categoryData = {{ category_data|safe }};
+            var categoryLabels = {{ category_labels|safe }};
+
+            // Отображение круговой диаграммы
+            var ctx = document.getElementById('expenseChart').getContext('2d');
+            var myChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: categoryLabels,
+                    datasets: [{
+                        data: categoryData,
+                        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],  // Цвета для каждой категории
+                    }],
+                },
+            });
+        });
+    </script>
+
 </div>
 {% endblock %}
