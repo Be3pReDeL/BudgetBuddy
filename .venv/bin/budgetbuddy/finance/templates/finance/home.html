@@ -5,7 +5,7 @@
 <div class="container">
     <h2>Главная страница</h2>
     <!-- Круговая диаграмма -->
-    <div>
+    <div style="display: flex; justify-content: center;">
         <canvas id="expenseChart" width="400" height="400"></canvas>
     </div>
     <!-- Кнопка для открытия модального окна -->
@@ -105,12 +105,27 @@
     </script>
 
     <script>
+        function getRandomColor() {
+            var r = Math.floor(Math.random() * 256);
+            var g = Math.floor(Math.random() * 256);
+            var b = Math.floor(Math.random() * 256);
+            return 'rgba(' + r + ', ' + g + ', ' + b + ', 0.2)'; // Прозрачность 0.2
+        }
+
         document.addEventListener("DOMContentLoaded", function () {
             // Получите данные из контекста шаблона
             var categoryData = {{ category_data|safe }};
             var categoryLabels = {{ category_labels|safe }};
 
-            // Отображение круговой диаграммы
+            // Генерация цветов
+            var backgroundColors = [];
+            var borderColors = [];
+            for (var i = 0; i < categoryLabels.length; i++) {
+                var color = getRandomColor();
+                backgroundColors.push(color);
+                borderColors.push(color.replace('0.2', '1'));
+            }
+
             var ctx = document.getElementById('expenseChart').getContext('2d');
             var myChart = new Chart(ctx, {
                 type: 'doughnut',
@@ -118,9 +133,14 @@
                     labels: categoryLabels,
                     datasets: [{
                         data: categoryData,
-                        backgroundColor: ['#FF6384', '#36A2EB', '#FFCE56'],  // Цвета для каждой категории
-                    }],
+                        backgroundColor: backgroundColors,
+                        borderColor: borderColors,
+                        borderWidth: 1
+                    }]
                 },
+                options: {
+                    responsive: false
+                }
             });
         });
     </script>

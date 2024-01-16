@@ -43,18 +43,12 @@ def home(request):
     unique_categories = Expense.objects.filter(user=request.user).values('category').distinct()
 
     # Посчитайте сумму расходов в каждой категории
-    total_expenses = Expense.objects.filter(user=request.user).aggregate(total=Sum('amount'))['total']
-
     for category_info in unique_categories:
         category = category_info['category']
-        category_expenses = Expense.objects.filter(user=request.user, category=category).aggregate(total=Sum('amount'))[
-            'total']
-
-        # Рассчитайте проценты от общей суммы
-        percentage = (category_expenses / total_expenses) * 100 if total_expenses else 0
+        category_expenses = Expense.objects.filter(user=request.user, category=category).aggregate(total=Sum('amount'))['total']
 
         category_labels.append(category)
-        category_data.append(percentage)
+        category_data.append(float(category_expenses))
 
     context = {'expenses_by_date': expenses_by_date, 'form': ExpenseForm(), 'category_labels': category_labels,
                'category_data': category_data}
