@@ -1,0 +1,21 @@
+{% extends 'finance/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="container">
+    <h2>Вход в систему</h2>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    <form method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-primary">Войти</button>
+    </form>
+    <p>Ещё нет аккаунта? <a href="{% url 'register' %}">Зарегистрируйтесь</a></p>
+</div>
+{% endblock %}
